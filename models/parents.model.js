@@ -1,23 +1,11 @@
-const { Parents } = require("../db/test_data/test.schema");
-
-// exports.newParent = async ({ parentName, auth0Id }) => {
-//   if (!parentName || !auth0Id) {
-//     throw {
-//       status: 400,
-//       msg: "Missing parent name or auth0Id",
-//     };
-//   }
-
-//   const parent = await Parents.create({ parentName, auth0Id });
-//   return parent;
-// };
+const { Parent } = require("../db/test_data/test.schema");
 
 exports.newParent = async ({ parentName, auth0Id }) => {
   if (!parentName || !auth0Id) {
     throw new Error("Missing parentName or auth0Id");
   }
 
-  return await Parents.create({ _id: auth0Id, parentName });
+  return await Parent.create({ _id: auth0Id, parentName });
 };
 
 exports.getParentById = async (id) => {
