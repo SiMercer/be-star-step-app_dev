@@ -1,17 +1,11 @@
 const { newParent, getParentById } = require("../models/parents.model");
 
-const postParent = async (req, res) => {
+exports.postParent = async (req, res) => {
   try {
-    const { parentName, auth0Id } = req.body;
-
-    if (!parentName || !auth0Id) {
-      return res.status(400).send({ msg: "Missing parent name or auth0Id" });
-    }
-
-    const createdParent = await newParent({ parentName, auth0Id });
-    res.status(201).send(createdParent);
+    const parent = await newParent(req.body);
+    res.status(201).send(parent);
   } catch (err) {
-    console.error("Error creating parent:", err);
+    console.error("Error creating parent:", err.message || err);
     res.status(500).send({ msg: "Error creating parent" });
   }
 };
