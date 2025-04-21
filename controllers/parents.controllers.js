@@ -1,11 +1,12 @@
 const { newParent, getParentById } = require("../models/parents.model");
 
-const postParent = async (req, res) => {
+exports.postParent = async (req, res) => {
+  console.log("POST /api/parents body:", req.body);
   try {
     const parent = await newParent(req.body);
     res.status(201).send(parent);
   } catch (err) {
-    console.error("Error creating parent:", err.message || err);
+    console.error("Error creating parent:", err.message);
     res.status(500).send({ msg: "Error creating parent" });
   }
 };
