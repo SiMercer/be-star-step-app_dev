@@ -1,7 +1,13 @@
-const { postParent, fetchParentById } = require('../controllers/parents.controllers')
+const express = require("express");
+const router = express.Router();
 
-const parentRouter = require('express').Router()
+const {
+  postParent,
+  fetchParentById,
+} = require("../controllers/parents.controllers");
 
-parentRouter.route('/').post(postParent)
-parentRouter.route('/:parent_id').get(fetchParentById)
-module.exports= parentRouter;
+router.post("/", postParent);
+
+router.get("/:id", fetchParentById);
+
+module.exports = router;
