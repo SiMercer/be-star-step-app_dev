@@ -1,29 +1,20 @@
-const { Kids, Parents } = require("../db/test_data/test.schema");
+const { Kids } = require("../db/test_data/test.schema");
 
-exports.createNewKid = async ({ name, age, avatar, parentID }) => {
+exports.createNewKid = async (kidData) => {
+  const { name, age, avatar, parentID } = kidData;
+
   if (!name || age == null || !avatar || !parentID) {
-    const err = new Error("Missing info");
-    err.status = 400;
-    throw err;
+    throw { status: 400, msg: "Missing info" };
   }
 
   if (
     typeof name !== "string" ||
     typeof avatar !== "string" ||
+    typeof parentID !== "string" ||
     typeof age !== "number" ||
-    !Number.isInteger(age) ||
-    typeof parentID !== "string"
+    !Number.isInteger(age)
   ) {
-    const err = new Error("Invalid data type entered");
-    err.status = 400;
-    throw err;
-  }
-
-  const parentExists = await Parents.findById(parentID);
-  if (!parentExists) {
-    const err = new Error("Parent not found");
-    err.status = 404;
-    throw err;
+    throw { status: 400, msg: "Invalid data type entered" };
   }
 
   const kid = new Kids({ name, age, avatar, parentID });
@@ -32,30 +23,17 @@ exports.createNewKid = async ({ name, age, avatar, parentID }) => {
 
 exports.selectKidById = async (childID) => {
   const kid = await Kids.findById(childID);
-  if (!kid) {
-    const err = new Error("Kid not found");
-    err.status = 404;
-    throw err;
-  }
+  if (!kid) throw { status: 404, msg: "Kid not found" };
   return kid;
 };
 
 exports.updateStarKidById = async (childID, stars) => {
-  if (stars == null) {
-    const err = new Error("Missing stars value");
-    err.status = 400;
-    throw err;
-  }
   const updatedKid = await Kids.findByIdAndUpdate(
     childID,
     { $inc: { stars } },
     { new: true }
   );
-  if (!updatedKid) {
-    const err = new Error("Kid not found");
-    err.status = 404;
-    throw err;
-  }
+  if (!updatedKid) throw { status: 404, msg: "Kid not found" };
   return updatedKid;
 };
 
