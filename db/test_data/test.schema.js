@@ -23,25 +23,39 @@ const parentSchema = new mongoose.Schema({
   },
 });
 
-const childSchema = new mongoose.Schema({
-  // childId: {
-  //   type: String,
-  //   default: uuidv4(),
-  // },
-
-  name: String,
-  age: Number,
-  stars: { type: Number, default: 0 },
-  // tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
-  // parentID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Parent" }],
-
-  parentID: {
-    type: String,
-    ref: "Parent",
+const childSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true],
+      trim: true,
+    },
+    age: {
+      type: Number,
+      required: [true],
+      min: [0],
+    },
+    stars: {
+      type: Number,
+      default: 0,
+      min: [0],
+    },
+    parentID: {
+      type: String,
+      ref: "Parent",
+      required: [true],
+    },
+    avatar: {
+      type: String,
+      required: [true],
+      trim: true,
+    },
   },
+  {
+    timestamps: true,
+  }
+);
 
-  avatar: String,
-});
 const taskSchema = new mongoose.Schema({
   // taskId: {
   //   type: String,

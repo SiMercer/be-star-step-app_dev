@@ -1,35 +1,31 @@
 const { Kids, Parents } = require("../db/test_data/test.schema");
 
-exports.createNewKid = async (kidData) => {
-  const { name, age, avatar, parentID } = kidData;
-
-  // Check required fields
-  if (
-    !name ||
-    !age ||
-    !avatar ||
-    !parentID ||
-    !Array.isArray(parentID) ||
-    parentID.length === 0
-  ) {
-    throw {
-      status: 400,
-      msg: "Missing info",
-    };
+exports.createNewKid = async ({ name, age, avatar, parentID }) => {
+  if (!name || age == null || !avatar || !parentID) {
+    const err = new Error("Missing info");
+    err.status = 400;
+    throw err;
   }
 
-  // Validate data types
   if (
     typeof name !== "string" ||
     typeof avatar !== "string" ||
     typeof age !== "number" ||
     !Number.isInteger(age) ||
-    !parentID.every((id) => typeof id === "string")
+    typeof parentID !== "string"
   ) {
-    throw { status: 400, msg: "Invalid data type entered" };
+    const err = new Error("Invalid data type entered");
+    err.status = 400;
+    throw err;
   }
 
-  // Create and save the kid
+  const parentExists = await Parents.findById(parentID);
+  if (!parentExists) {
+    const err = new Error("Parent not found");
+    err.status = 404;
+    throw err;
+  }
+
   const kid = new Kids({ name, age, avatar, parentID });
   return await kid.save();
 };
@@ -37,27 +33,32 @@ exports.createNewKid = async (kidData) => {
 exports.selectKidById = async (childID) => {
   const kid = await Kids.findById(childID);
   if (!kid) {
-    throw { status: 404, msg: "Kid not found" };
+    const err = new Error("Kid not found");
+    err.status = 404;
+    throw err;
   }
-
   return kid;
 };
+
 exports.updateStarKidById = async (childID, stars) => {
-  const updtatedKid = await Kids.findByIdAndUpdate(
+  if (stars == null) {
+    const err = new Error("Missing stars value");
+    err.status = 400;
+    throw err;
+  }
+  const updatedKid = await Kids.findByIdAndUpdate(
     childID,
     { $inc: { stars } },
     { new: true }
   );
-  if (!updtatedKid) {
-    throw { status: 404, msg: "Kid not found" };
+  if (!updatedKid) {
+    const err = new Error("Kid not found");
+    err.status = 404;
+    throw err;
   }
-
-  return updtatedKid;
+  return updatedKid;
 };
 
 exports.getKidsByParentId = async (parentID) => {
-  const requestToDb = {};
-  requestToDb.parent_id = parentID;
-  const listKid = await Kids.find(requestToDb);
-  return listKid;
+  return await Kids.find({ parentID });
 };
