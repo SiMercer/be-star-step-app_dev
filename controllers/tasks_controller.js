@@ -60,7 +60,7 @@ exports.postTaskByParent = (req, res, next) => {
   const { parentID } = req.params;
   const taskData = { ...req.body, createdBy: parentID };
   createNewTask(taskData)
-    .then((newTask) => res.status(201).json(newTask))
+    .then((task) => res.status(201).json(task))
     .catch(next);
 };
 
