@@ -8,12 +8,12 @@ const {
   getKidsByParentId,
 } = require("../controllers/kids.controllers");
 
-router.post("/kids", postKid);
+router.post("/", postKid);
 
-router.get("/kids/:childId", getKidById);
+router.get("/:childId", getKidById);
 
-router.patch("/kids/:childId/stars", patchStarsKidById);
+router.patch("/:childId/stars", patchStarsKidById);
 
-router.get("/kids/parent/:parentId", getKidsByParentId);
+router.get("/parent/:parentId", getKidsByParentId);
 
 module.exports = router;
