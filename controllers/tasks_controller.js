@@ -5,6 +5,7 @@ const {
   fetchTasks,
   fetchTaskById,
 } = require("../models/task_model");
+const mongoose = require("mongoose");
 
 exports.postTask = (req, res, next) => {
   return createNewTask(req.body)
@@ -66,7 +67,15 @@ exports.postTaskByParent = (req, res, next) => {
 
 exports.getTasksByParentId = (req, res, next) => {
   const { parentID } = req.params;
-  fetchTasks("createdBy", parentID)
+
+  // validate and convert to ObjectId
+  if (!mongoose.Types.ObjectId.isValid(parentID)) {
+    return res.status(400).json({ error: "Invalid parentID format" });
+  }
+
+  const objectId = mongoose.Types.ObjectId(parentID);
+
+  fetchTasks("createdBy", objectId)
     .then((tasks) => res.json(tasks))
     .catch(next);
 };
