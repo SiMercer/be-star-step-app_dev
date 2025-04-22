@@ -4,14 +4,23 @@ const {
   patchTaskById,
   getTasks,
   getTaskById,
+  postTaskByParent,
+  getTasksByParentId,
 } = require("../controllers/tasks_controller");
 
 const tasksRouter = require("express").Router();
+
 tasksRouter.route("/").post(postTask).get(getTasks);
+
 tasksRouter
   .route("/:task_id")
-  .delete(deleteTaskById)
+  .get(getTaskById)
   .patch(patchTaskById)
-  .get(getTaskById);
+  .delete(deleteTaskById);
+
+tasksRouter
+  .route("/parent/:parentID")
+  .post(postTaskByParent)
+  .get(getTasksByParentId);
 
 module.exports = tasksRouter;

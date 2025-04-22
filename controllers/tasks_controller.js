@@ -9,23 +9,18 @@ const {
 exports.postTask = (req, res, next) => {
   return createNewTask(req.body)
     .then((newTaskData) => {
-      res.status(201).send(newTaskData);
+      res.status(201).json(newTaskData);
     })
-    .catch((err) => {
-      console.log(err);
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.deleteTaskById = (req, res, next) => {
   const task_id = req.params.task_id;
   return removeTaskById(task_id)
-    .then((data) => {
-      res.status(204).send(data);
+    .then(() => {
+      res.status(204).send();
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.patchTaskById = (req, res, next) => {
@@ -33,35 +28,45 @@ exports.patchTaskById = (req, res, next) => {
   const updates = req.body;
   return editTaskById(task_id, updates)
     .then((updatedTask) => {
-      res.status(200).send(updatedTask);
+      res.status(200).json(updatedTask);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
+
 exports.getTasks = (req, res, next) => {
   const queryKey = Object.keys(req.query)[0];
   const queryValue = Object.values(req.query)[0];
   if (queryKey && queryValue) {
     return fetchTasks(queryKey, queryValue)
       .then((listOfTasks) => {
-        res.send(listOfTasks);
+        res.json(listOfTasks);
       })
-      .catch((err) => {
-        next(err);
-      });
+      .catch(next);
   } else {
-    res.status(404).send("Not found");
+    res.status(404).send({ msg: "Not found" });
   }
 };
+
 exports.getTaskById = (req, res, next) => {
   const task_id = req.params.task_id;
   return fetchTaskById(task_id)
     .then((task) => {
-      console.log(task);
-      res.send(task);
+      res.json(task);
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
+};
+
+exports.postTaskByParent = (req, res, next) => {
+  const { parentID } = req.params;
+  const taskData = { ...req.body, createdBy: parentID };
+  createNewTask(taskData)
+    .then((newTask) => res.status(201).json(newTask))
+    .catch(next);
+};
+
+exports.getTasksByParentId = (req, res, next) => {
+  const { parentID } = req.params;
+  fetchTasks("createdBy", parentID)
+    .then((tasks) => res.json(tasks))
+    .catch(next);
 };
