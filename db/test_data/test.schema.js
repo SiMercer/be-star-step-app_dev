@@ -22,7 +22,14 @@ const taskSchema = new mongoose.Schema({
   },
   validBefore: Date,
   createdBy: { type: String, ref: "Parent", required: true },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "Child" },
+  assignedTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Child",
+    validate: {
+      validator: mongoose.Types.ObjectId.isValid,
+      message: "Invalid ObjectId for assignedTo",
+    },
+  },
   starsReward: { type: Number, default: 0 },
 });
 
