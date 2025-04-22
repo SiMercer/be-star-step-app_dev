@@ -39,7 +39,6 @@ exports.editTaskById = async (task_id, updates) => {
 
   return readyResponse;
 };
-const mongoose = require("mongoose");
 
 exports.fetchTasks = async (queryKey, queryValue) => {
   const requestToDb = {};
