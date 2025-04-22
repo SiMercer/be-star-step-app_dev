@@ -59,9 +59,15 @@ exports.getTaskById = (req, res, next) => {
 exports.postTaskByParent = (req, res, next) => {
   const { parentID } = req.params;
   const taskData = { ...req.body, createdBy: parentID };
+
   createNewTask(taskData)
     .then((task) => res.status(201).json(task))
-    .catch(next);
+    .catch((err) => {
+      console.error("POST TASK ERROR:", err);
+      res
+        .status(500)
+        .json({ msg: "Internal Server Error", error: err.message });
+    });
 };
 
 exports.getTasksByParentId = (req, res, next) => {

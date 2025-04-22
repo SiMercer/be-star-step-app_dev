@@ -2,6 +2,15 @@ const { Tasks } = require("../db/test_data/test.schema");
 const { dataConvert } = require("../utils/data_convert_for_response");
 
 exports.createNewTask = async (taskData) => {
+  if (
+    taskData.assignedTo &&
+    !mongoose.Types.ObjectId.isValid(taskData.assignedTo)
+  ) {
+    const err = new Error("Invalid ObjectId for assignedTo");
+    err.status = 400;
+    throw err;
+  }
+
   const created = await Tasks.create(taskData);
   const validBefore = dataConvert(created.validBefore);
   return { ...created._doc, validBefore };
