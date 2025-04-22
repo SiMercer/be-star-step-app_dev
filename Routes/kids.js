@@ -1,11 +1,19 @@
+const express = require("express");
+const router = express.Router();
+
 const {
   postKid,
   getKidById,
   patchStarsKidById,
   getKidByParentId,
-} = require("../controllers/kids_controller");
+} = require("../controllers/kids.controllers");
 
-const kidRoutes = require("express").Router();
-kidRoutes.route("/").post(postKid).get(getKidByParentId);
-kidRoutes.route("/:childId").get(getKidById).patch(patchStarsKidById);
-module.exports = kidRoutes;
+router.post("/kids", postKid);
+
+router.get("/kids/:childId", getKidById);
+
+router.patch("/kids/:childId/stars", patchStarsKidById);
+
+router.get("/kids/parent/:parentId", getKidByParentId);
+
+module.exports = router;
