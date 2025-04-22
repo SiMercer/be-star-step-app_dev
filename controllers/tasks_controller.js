@@ -70,15 +70,14 @@ exports.postTaskByParent = (req, res, next) => {
     });
 };
 
-exports.getTasksByParentId = async (req, res, next) => {
-  try {
-    const { parentID } = req.params;
-    const objectId = new mongoose.Types.ObjectId(parentID);
-
-    const tasks = await fetchTasks("createdBy", objectId);
-    res.json(tasks);
-  } catch (err) {
-    console.error("Error fetching tasks by parentID:", err);
-    res.status(500).json({ error: "Internal server error" });
-  }
+exports.getTasksByParentId = (req, res, next) => {
+  const { parentID } = req.params;
+  fetchTasks("createdBy", parentID)
+    .then((tasks) => res.json(tasks))
+    .catch((err) => {
+      console.error("GET TASKS BY PARENT ID ERROR:", err);
+      res
+        .status(500)
+        .json({ error: "Internal server error", detail: err.message });
+    });
 };

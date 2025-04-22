@@ -41,26 +41,34 @@ exports.editTaskById = async (task_id, updates) => {
 };
 
 exports.fetchTasks = async (queryKey, queryValue) => {
-  const requestToDb = {};
-
-  if (["createdBy", "assignedTo", "_id"].includes(queryKey)) {
-    requestToDb[queryKey] = new mongoose.Types.ObjectId(queryValue);
-  } else {
+  console.log("Fetching tasks with query:", queryKey, queryValue);
+  try {
+    const requestToDb = {};
     requestToDb[queryKey] = queryValue;
+
+    const listOfTasks = await Tasks.find(requestToDb);
+
+    const newListOfTasks = [];
+
+    listOfTasks.forEach((task) => {
+      try {
+        const date = task.validBefore;
+        const newDate = date ? dataConvert(date) : null;
+
+        newListOfTasks.push({ ...task._doc, validBefore: newDate });
+      } catch (innerErr) {
+        console.error("Error formatting task date:", innerErr);
+        newListOfTasks.push({ ...task._doc, validBefore: null });
+      }
+    });
+
+    return newListOfTasks;
+  } catch (err) {
+    console.error("FETCH TASKS ERROR:", err);
+    throw err;
   }
-
-  const listOfTasks = await Tasks.find(requestToDb);
-
-  const newListOfTasks = [];
-
-  listOfTasks.forEach((task) => {
-    const date = task.validBefore;
-    const newDate = dataConvert(date);
-    newListOfTasks.push({ ...task._doc, validBefore: newDate });
-  });
-
-  return newListOfTasks;
 };
+
 exports.fetchTaskById = async (task_id) => {
   console.log(task_id);
   const task = await Tasks.findById(task_id);
