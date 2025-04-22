@@ -1,5 +1,6 @@
 const { Tasks } = require("../db/test_data/test.schema");
 const { dataConvert } = require("../utils/data_convert_for_response");
+const mongoose = require("mongoose");
 
 exports.createNewTask = async (taskData) => {
   if (
@@ -38,9 +39,16 @@ exports.editTaskById = async (task_id, updates) => {
 
   return readyResponse;
 };
+const mongoose = require("mongoose");
+
 exports.fetchTasks = async (queryKey, queryValue) => {
   const requestToDb = {};
-  requestToDb[queryKey] = queryValue;
+
+  if (["createdBy", "assignedTo", "_id"].includes(queryKey)) {
+    requestToDb[queryKey] = new mongoose.Types.ObjectId(queryValue);
+  } else {
+    requestToDb[queryKey] = queryValue;
+  }
 
   const listOfTasks = await Tasks.find(requestToDb);
 
