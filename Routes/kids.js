@@ -5,7 +5,7 @@ const {
   postKid,
   getKidById,
   patchStarsKidById,
-  getKidByParentId,
+  getKidsByParentId,
 } = require("../controllers/kids.controllers");
 
 router.post("/kids", postKid);
@@ -14,6 +14,6 @@ router.get("/kids/:childId", getKidById);
 
 router.patch("/kids/:childId/stars", patchStarsKidById);
 
-router.get("/kids/parent/:parentId", getKidByParentId);
+router.get("/kids/parent/:parentId", getKidsByParentId);
 
 module.exports = router;
