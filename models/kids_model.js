@@ -1,10 +1,11 @@
-exports.createNewKid = async (kidData) => {
-  const { name, age, avatar, parentID } = kidData;
+const { Child } = require("../db/test_data/test.schema");
 
+exports.createNewKid = async ({ name, age, avatar, parentID }) => {
   if (!name || age == null || !avatar || !parentID) {
-    throw { status: 400, msg: "Missing info" };
+    const err = new Error("Missing info");
+    err.status = 400;
+    throw err;
   }
-
   if (
     typeof name !== "string" ||
     typeof avatar !== "string" ||
@@ -12,39 +13,38 @@ exports.createNewKid = async (kidData) => {
     !Number.isInteger(age) ||
     typeof parentID !== "string"
   ) {
-    throw { status: 400, msg: "Invalid data type entered" };
+    const err = new Error("Invalid data type entered");
+    err.status = 400;
+    throw err;
   }
-
-  const parent = await Parent.findById(parentID);
-  if (!parent) {
-    throw { status: 404, msg: "Parent not found" };
-  }
-
   const kid = new Child({ name, age, avatar, parentID });
   return await kid.save();
 };
 
-exports.selectKidById = async (childID) => {
-  const kid = await Child.findById(childID);
+exports.selectKidById = async (id) => {
+  const kid = await Child.findById(id);
   if (!kid) {
-    throw { status: 404, msg: "Kid not found" };
+    const err = new Error("Kid not found");
+    err.status = 404;
+    throw err;
   }
   return kid;
 };
 
-exports.updateStarKidById = async (childID, stars) => {
-  const updatedKid = await Child.findByIdAndUpdate(
-    childID,
+exports.updateStarKidById = async (id, stars) => {
+  const kid = await Child.findByIdAndUpdate(
+    id,
     { $inc: { stars } },
     { new: true }
   );
-  if (!updatedKid) {
-    throw { status: 404, msg: "Kid not found" };
+  if (!kid) {
+    const err = new Error("Kid not found");
+    err.status = 404;
+    throw err;
   }
-  return updatedKid;
+  return kid;
 };
 
 exports.getKidsByParentId = async (parentID) => {
-  const kids = await Child.find({ parentID });
-  return kids;
+  return await Child.find({ parentID });
 };

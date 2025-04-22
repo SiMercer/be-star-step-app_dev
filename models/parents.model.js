@@ -1,15 +1,21 @@
-const { Parents } = require("../db/test_data/test.schema");
+const { Parent } = require("../db/test_data/test.schema");
 
-exports.newParent = async ({ parentName, auth0Id }) => {
-  if (!parentName || !auth0Id) {
-    throw Object.assign(new Error("Missing parentName or auth0Id"), {
-      status: 400,
-    });
+exports.newParent = async ({ auth0Id, parentName }) => {
+  if (!auth0Id || !parentName) {
+    const err = new Error("Missing auth0Id or parentName");
+    err.status = 400;
+    throw err;
   }
-
+  // Create with the Auth0 sub as the _id
   return await Parent.create({ _id: auth0Id, parentName });
 };
 
 exports.getParentById = async (id) => {
-  return await Parents.findById(id);
+  const parent = await Parent.findById(id);
+  if (!parent) {
+    const err = new Error("Parent not found");
+    err.status = 404;
+    throw err;
+  }
+  return parent;
 };
