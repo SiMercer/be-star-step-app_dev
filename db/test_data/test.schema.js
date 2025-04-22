@@ -6,6 +6,8 @@ const parentSchema = new mongoose.Schema({
   parentName: { type: String, required: true },
 });
 
+const Parents = mongoose.model("Parent", parentSchema);
+
 const childSchema = new mongoose.Schema({
   name: { type: String, required: true },
   age: { type: Number, required: true },
@@ -54,4 +56,4 @@ const Child = mongoose.model("Child", childSchema);
 const Task = mongoose.model("Task", taskSchema);
 const Reward = mongoose.model("Reward", rewardSchema);
 
-module.exports = { Parent, Child, Task, Reward };
+module.exports = { Parent, Parents, Child, Task, Reward };
