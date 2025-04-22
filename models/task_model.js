@@ -2,18 +2,21 @@ const { Tasks } = require("../db/test_data/test.schema");
 const { dataConvert } = require("../utils/data_convert_for_response");
 
 exports.createNewTask = async (taskData) => {
-  const newTask = await Tasks.insertOne(taskData);
-  const date = newTask.validBefore;
-  const newDate = dataConvert(date);
-
-  const readyResponse = { ...newTask._doc, validBefore: newDate };
-
-  return readyResponse;
+  const created = await Tasks.create(taskData);
+  const validBefore = dataConvert(created.validBefore);
+  return { ...created._doc, validBefore };
 };
+
 exports.removeTaskById = async (task_id) => {
-  const deletedTask = await Tasks.deleteOne({ _id: task_id });
-  return deletedTask;
+  const deleted = await Tasks.findByIdAndDelete(task_id);
+  if (!deleted) {
+    const err = new Error("Task not found");
+    err.status = 404;
+    throw err;
+  }
+  return deleted;
 };
+
 exports.editTaskById = async (task_id, updates) => {
   const editedTask = await Tasks.findByIdAndUpdate(task_id, updates, {
     new: true,
