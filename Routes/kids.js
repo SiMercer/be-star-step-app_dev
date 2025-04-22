@@ -14,6 +14,6 @@ router.get("/:childId", getKidById);
 
 router.patch("/:childId/stars", patchStarsKidById);
 
-router.get("/parent/:parentId", getKidsByParentId);
+router.get("/parent/:parentID", getKidsByParentId);
 
 module.exports = router;
