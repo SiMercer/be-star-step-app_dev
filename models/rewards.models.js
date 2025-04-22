@@ -73,3 +73,12 @@ exports.updateRewardsById = (reward_id, body) => {
 exports.removeRewardsById = (reward_id) => {
   return Rewards.findByIdAndDelete(reward_id);
 };
+
+exports.getRewardsByParentId = async (parentID) => {
+  if (!parentID) {
+    const err = new Error("Missing parentID");
+    err.status = 400;
+    throw err;
+  }
+  return Reward.find({ createdBy: parentID });
+};
