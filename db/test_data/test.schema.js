@@ -43,7 +43,7 @@ const rewardSchema = new mongoose.Schema({
 
 const Parent = mongoose.model("Parent", parentSchema);
 const Kids = mongoose.model("Child", childSchema);
-const Tasks = mongoose.model("Tasks", taskSchema);
+const Tasks = mongoose.model("Task", taskSchema);
 const Reward = mongoose.model("Reward", rewardSchema);
 
 module.exports = { Parent, Kids, Tasks, Reward };
