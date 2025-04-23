@@ -4,6 +4,7 @@ const {
   editTaskById,
   fetchTasks,
   fetchTaskById,
+  fetchTasksByAssignedTo,
 } = require("../models/task_model");
 
 exports.postTask = (req, res, next) => {
@@ -80,4 +81,15 @@ exports.getTasksByParentId = (req, res, next) => {
         .status(500)
         .json({ error: "Internal server error", detail: err.message });
     });
+};
+
+exports.getTasksByAssignedTo = async (req, res) => {
+  const { assignedToId } = req.params;
+
+  try {
+    const tasks = await fetchTasksByAssignedTo(assignedToId);
+    res.status(200).json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };

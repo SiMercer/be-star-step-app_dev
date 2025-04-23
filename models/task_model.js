@@ -74,3 +74,7 @@ exports.fetchTaskById = async (task_id) => {
   const task = await Tasks.findById(task_id);
   return task;
 };
+
+exports.fetchTasksByAssignedTo = (assignedToId) => {
+  return Task.find({ assignedTo: assignedToId });
+};

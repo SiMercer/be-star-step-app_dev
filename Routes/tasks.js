@@ -6,11 +6,14 @@ const {
   getTaskById,
   postTaskByParent,
   getTasksByParentId,
+  getTasksByAssignedTo,
 } = require("../controllers/tasks_controller");
 
 const tasksRouter = require("express").Router();
 
 tasksRouter.route("/").post(postTask).get(getTasks);
+
+tasksRouter.get("/assigned/:assignedToId", getTasksByAssignedTo);
 
 tasksRouter
   .route("/:task_id")
