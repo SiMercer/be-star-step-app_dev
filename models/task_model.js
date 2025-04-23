@@ -1,7 +1,7 @@
 const { Tasks } = require("../db/test_data/test.schema");
 const { dataConvert } = require("../utils/data_convert_for_response");
 const mongoose = require("mongoose");
-const Task = require("../schemas/taskSchema");
+const Task = require("../db/test_data/test.schema");
 
 exports.createNewTask = async (taskData) => {
   if (
@@ -77,5 +77,5 @@ exports.fetchTaskById = async (task_id) => {
 };
 
 exports.fetchTasksByAssignedTo = (assignedToId) => {
-  return Task.find({ assignedTo: assignedToId });
+  return Tasks.find({ assignedTo: assignedToId });
 };
