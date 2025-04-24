@@ -8,7 +8,7 @@ const userRoutes = require("./Routes/user");
 const versionRouter = require("./Routes/version");
 const cors = require('cors');
 
-app.use(cors());
+// app.use(cors());
 connectDB();
 app.use(express.json());
 
