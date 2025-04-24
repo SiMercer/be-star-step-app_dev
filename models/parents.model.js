@@ -1,19 +1,16 @@
 const { Parent } = require("../db/test_data/test.schema");
 
-exports.newParent = async ({ parentName, auth0Id }) => {
-  if (!parentName || !auth0Id) {
-    const err = new Error("Missing parentName or auth0Id");
-    err.status = 400;
-    throw err;
-  }
+exports.newParent = async ({ auth0Id, parentName }) => {
+  const existing = await Parent.findOne({ auth0Id });
+  if (existing) return existing;
 
-  const existing = await Parent.findById(auth0Id);
-  if (existing) {
-    return existing;
-  }
+  const parent = new Parent({
+    auth0Id,
+    parentName,
+    pin: "00000"
+  });
 
-  const parent = await Parent.create({ _id: auth0Id, parentName });
-  return parent;
+  return parent.save();
 };
 
 exports.getParentById = async (id) => {
