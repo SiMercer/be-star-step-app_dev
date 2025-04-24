@@ -1,4 +1,4 @@
-const { newParent, getParentById } = require("../models/parents.model");
+const { newParent, Parent, getParentById } = require("../models/parents.model");
 
 exports.postParent = async (req, res, next) => {
   try {
