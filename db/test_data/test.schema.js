@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
 const parentSchema = new mongoose.Schema({
-  _id: { type: String, required: true },
+  auth0Id: { type: String, required: true, unique: true },
   parentName: { type: String, required: true },
+  pin: { type: String, default: "00000" },
 });
 
 const childSchema = new mongoose.Schema({
