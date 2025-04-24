@@ -50,19 +50,17 @@ exports.setParentPin = async (req, res) => {
   }
 
   try {
-    const updated = await Parent.findOneAndUpdate(
+    const parent = await Parent.findOneAndUpdate(
       { auth0Id },
       { pin },
       { new: true }
     );
 
-    if (!updated) {
-      return res.status(404).json({ msg: "Parent not found" });
-    }
+    if (!parent) return res.status(404).json({ msg: "Parent not found" });
 
-    res.json({ msg: "PIN updated successfully", parent: updated });
+    res.json({ msg: "PIN updated", parent });
   } catch (err) {
-    console.error("Error setting PIN:", err);
+    console.error("Failed to update PIN:", err);
     res.status(500).json({ msg: "Server error" });
   }
 };

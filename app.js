@@ -6,6 +6,7 @@ const cors = require("cors");
 const { connectDB } = require("./db/connection");
 const userRoutes = require("./Routes/user");
 const versionRouter = require("./Routes/version");
+const cors = require('cors');
 
 app.use(cors());
 connectDB();
@@ -25,6 +26,12 @@ app.use((err, req, res, next) => {
   const msg = err.msg || "Internal Server Error";
   res.status(status).json({ msg });
 });
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  credentials: true
+}));
 
 app.listen(3000, () => {
   console.log("Server running on http://localhost:3000");
