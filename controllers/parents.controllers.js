@@ -41,7 +41,7 @@ exports.fetchParentPinById = async (req, res, next) => {
 };
 
 
-exports.updateParentPin = async (req, res) => {
+exports.setParentPin = async (req, res) => {
   const { auth0Id } = req.params;
   const { pin } = req.body;
 
@@ -60,9 +60,9 @@ exports.updateParentPin = async (req, res) => {
       return res.status(404).json({ msg: "Parent not found" });
     }
 
-    res.status(200).json(updated);
+    res.json({ msg: "PIN updated successfully", parent: updated });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ msg: "Error updating PIN" });
+    console.error("Error setting PIN:", err);
+    res.status(500).json({ msg: "Server error" });
   }
-}
+};

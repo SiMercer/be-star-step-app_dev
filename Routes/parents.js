@@ -1,16 +1,17 @@
 const express = require("express");
 const router = express.Router();
+const { setParentPin } = require("../controllers/parents");
 
 const {
   postParent,
   fetchParentById,
-  fetchParentPinById,
+  setParentPin,
 } = require("../controllers/parents.controllers");
 
 router.post("/", postParent);
 
 router.get("/:id", fetchParentById);
 
-router.patch("/parents/:auth0Id/pin", updateParentPin);
+router.patch("/:auth0Id/pin", setParentPin);
 
 module.exports = router;
