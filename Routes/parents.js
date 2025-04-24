@@ -12,6 +12,8 @@ router.post("/", postParent);
 
 router.get("/:id", fetchParentById);
 
-router.patch("/:auth0Id/pin", setParentPin);
+router.patch("/:id/pin", setParentPin);
 
 module.exports = router;
+
+

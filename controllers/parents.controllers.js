@@ -41,22 +41,26 @@ exports.fetchParentPinById = async (req, res, next) => {
 };
 
 
-exports.setParentPin = async (req, res, next) => {
+exports.setParentPin = async (req, res) => {
+  const { id } = req.params;
+  const { pin } = req.body;
+
+  if (!pin || pin.length !== 4) {
+    return res.status(400).json({ error: "PIN must be 4 digits long." });
+  }
+
   try {
-    const { id } = req.params;
-    const { pin } = req.body;
+    const parent = await Parent.findByIdAndUpdate(
+      id,
+      { pin },
+      { new: true }
+    );
 
-    console.log("Received PIN update request:", { id, pin });
+    if (!parent) return res.status(404).json({ error: "Parent not found." });
 
-    const parent = await Parent.findByIdAndUpdate(id, { pin }, { new: true });
-
-    if (!parent) {
-      return res.status(404).json({ msg: "Parent not found" });
-    }
-
-    res.status(200).json({ msg: "PIN updated", parent });
+    res.status(200).json(parent);
   } catch (err) {
-    console.error("Error in setParentPin:", err); // <- this line is important
-    next(err);
+    console.error("Failed to update PIN:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };
