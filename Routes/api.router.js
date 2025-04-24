@@ -9,11 +9,8 @@ const apiRouter = require("express").Router();
 apiRouter.get("/", getApi);
 
 apiRouter.use("/parents", parentRouter);
-
 apiRouter.use("/kids", kidRoutes);
-
 apiRouter.use("/tasks", tasksRouter);
-
 apiRouter.use("/rewards", rewardsRouter);
 
 module.exports = apiRouter;

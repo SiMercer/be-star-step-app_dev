@@ -1,4 +1,5 @@
-const { newParent, Parent, getParentById } = require("../models/parents.model");
+const { newParent, getParentById } = require("../models/parents.model");
+const { Parent } = require("../db/test_data/test.schema");
 
 exports.postParent = async (req, res, next) => {
   try {
@@ -21,8 +22,6 @@ exports.fetchParentById = async (req, res, next) => {
   }
 };
 
-
-
 exports.fetchParentPinById = async (req, res, next) => {
   const { id } = req.params;
   const { pin } = req.body;
@@ -40,7 +39,6 @@ exports.fetchParentPinById = async (req, res, next) => {
   }
 };
 
-
 exports.setParentPin = async (req, res) => {
   const { id } = req.params;
   const { pin } = req.body;
@@ -50,11 +48,7 @@ exports.setParentPin = async (req, res) => {
   }
 
   try {
-    const parent = await Parent.findByIdAndUpdate(
-      id,
-      { pin },
-      { new: true }
-    );
+    const parent = await Parent.findByIdAndUpdate(id, { pin }, { new: true });
 
     if (!parent) return res.status(404).json({ error: "Parent not found." });
 
