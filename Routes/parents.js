@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const { setParentPin } = require("../Controllers/parents");
 
 const {
   postParent,
