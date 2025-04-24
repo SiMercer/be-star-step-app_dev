@@ -41,26 +41,22 @@ exports.fetchParentPinById = async (req, res, next) => {
 };
 
 
-exports.setParentPin = async (req, res) => {
-  const { auth0Id } = req.params;
-  const { pin } = req.body;
-
-  if (!pin || pin.length !== 4) {
-    return res.status(400).json({ msg: "PIN must be 4 digits" });
-  }
-
+exports.setParentPin = async (req, res, next) => {
   try {
-    const parent = await Parent.findOneAndUpdate(
-      { auth0Id },
-      { pin },
-      { new: true }
-    );
+    const { id } = req.params;
+    const { pin } = req.body;
 
-    if (!parent) return res.status(404).json({ msg: "Parent not found" });
+    console.log("Received PIN update request:", { id, pin });
 
-    res.json({ msg: "PIN updated", parent });
+    const parent = await Parent.findByIdAndUpdate(id, { pin }, { new: true });
+
+    if (!parent) {
+      return res.status(404).json({ msg: "Parent not found" });
+    }
+
+    res.status(200).json({ msg: "PIN updated", parent });
   } catch (err) {
-    console.error("Failed to update PIN:", err);
-    res.status(500).json({ msg: "Server error" });
+    console.error("Error in setParentPin:", err); // <- this line is important
+    next(err);
   }
 };
